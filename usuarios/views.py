@@ -5,6 +5,7 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib import auth
+from .models import Pacientes
 
 
 def cadastro(request):
@@ -48,8 +49,28 @@ def login(request):
         user = authenticate(request, username=username, password=senha)
         if user:
             auth.login(request, user)
-            return redirect('paciente')
+            return redirect('pacientes')
 
         messages.add_message(request, constants.ERROR,
                              'Usuário ou senha inválidos!')
         return redirect('login')
+
+
+def pacientes(request):
+    if request.method == 'GET':
+        pacientes = Pacientes.objects.all()
+        return render(request, 'pacientes.html', {'pacientes': pacientes})
+    elif request.method == 'POST':
+        foto = request.FILES.get('foto')
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao')
+
+        paciente = Pacientes(
+            foto=foto,
+            nome=nome,
+            descricao=descricao
+        )
+
+        paciente.save()
+
+        return redirect('pacientes')

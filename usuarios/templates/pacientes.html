@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block 'body' %}
+    <div class="relative isolate overflow-hidden bg-white min-h-screen">
+        <svg aria-hidden="true"
+             class="absolute inset-0 -z-10 size-full mask-[radial-gradient(100%_100%_at_top_right,white,transparent)] stroke-gray-200">
+            <defs>
+            <pattern id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+            <path d="M.5 200V.5H200" fill="none" />
+            </pattern>
+            </defs>
+            <svg x="50%" y="-1" class="overflow-visible fill-gray-50">
+                <path d="M-200 0h201v201h-201Z M600 0h201v201h-201Z M-400 600h201v201h-201Z M200 800h201v201h-201Z" stroke-width="0" />
+            </svg>
+            <rect width="100%" height="100%" fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)" stroke-width="0" />
+        </svg>
+        <div aria-hidden="true"
+             class="absolute top-10 left-[calc(50%-4rem)] -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:top-[calc(50%-30rem)] lg:left-48 xl:left-[calc(50%-24rem)]">
+            <div style="clip-path: polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)"
+                 class="aspect-1108/632 w-277 bg-linear-to-r from-[#80caff] to-[#4f46e5] opacity-20"></div>
+        </div>
+        <div class="max-w-7xl mt-8 mx-auto">
+            <div class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
+                <h3 class="text-base font-semibold text-gray-900">Pacientes</h3>
+                <div class="mt-3 sm:mt-0 sm:ml-4">
+                    <button data-dialog-target="sign-in-modal"
+                            type="button"
+                            class="inline-flex cursor-pointer items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Novo paciente
+                    </button>
+                </div>
+            </div>
+            <div class="mt-6">
+                
+                {% for paciente in pacientes %}
+                    <a href="#"
+                        class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl">
+                        <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                                src="{{paciente.foto.url}}"
+                                alt="">
+                        <div class="flex flex-col p-4 leading-normal gap-2">
+                            <h5 class="text-2xl font-bold tracking-tight text-gray-900">{{paciente.nome}}</h5>
+                            <p class="font-normal text-gray-700">{{paciente.descricao}}</p>
+                            <hr class="border-slate-800/20 my-2 w-full">
+                            <div class="flex items-center justify-between text-sm font-medium text-gray-900">
+                                <div class="flex items-center">
+                                    <svg viewBox="0 0 6 6"
+                                            aria-hidden="true"
+                                            class="w-3 h-3 mr-2 fill-green-500">
+                                        <circle r="3" cx="3" cy="3" />
+                                    </svg>
+                                    Ativo
+                                </div>
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke-width="1.5"
+                                            stroke="currentColor"
+                                            class="w-5 h-5 mr-1">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                    </svg>
+                                    10
+                                </div>
+                            </div>
+                        </div>
+                    </a>                    
+                {% endfor %}                
+                
+            </div>
+        </div>
+    </div>
+    <div data-dialog-backdrop="sign-in-modal"
+         data-dialog-backdrop-close="true"
+         class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black/10 bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+        <div data-dialog="sign-in-modal"
+             class="relative mx-auto w-full max-w-[24rem] rounded-lg overflow-hidden shadow-sm">
+            <div class="relative flex flex-col bg-white">
+                <div class="relative m-2.5 items-center flex justify-center text-white h-24 rounded-md bg-indigo-800">
+                    <h3 class="text-2xl">Novo paciente</h3>
+                </div>
+                <div class="flex flex-col gap-4 p-6">
+                    <form action="{% url 'pacientes' %}"
+                          method="POST"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="w-full max-w-sm min-w-[200px]">
+                            <label class="block mb-2 text-sm text-slate-600">Foto</label>
+                            <input type="file"
+                                   name="foto"
+                                   class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                                   placeholder="" />
+                        </div>
+                        <div class="mt-2 w-full max-w-sm min-w-[200px]">
+                            <label class="block mb-2 text-sm text-slate-600">Nome</label>
+                            <input type="text"
+                                   name="nome"
+                                   class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                                   placeholder="Nome..." />
+                        </div>
+                        <div class="mt-2 w-full max-w-sm min-w-[200px]">
+                            <label class="block mb-2 text-sm text-slate-600">Descrição</label>
+                            <textarea name="descricao"
+                                      class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"></textarea>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <input type="submit"
+                               value="Cadastrar"
+                               class="w-full cursor-pointer rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                               type="button">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const openButtons = document.querySelectorAll("[data-dialog-target]");
+            const backdrops = document.querySelectorAll("[data-dialog-backdrop]");
+            
+            openButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const target = btn.getAttribute("data-dialog-target");
+                const backdrop = document.querySelector(`[data-dialog-backdrop="${target}"]`);
+                if (backdrop) {
+                backdrop.classList.remove("opacity-0", "pointer-events-none");
+                backdrop.classList.add("opacity-100", "pointer-events-auto");
+                }
+            });
+            });
+
+        
+            backdrops.forEach((backdrop) => {
+            backdrop.addEventListener("click", (e) => {
+                if (backdrop.getAttribute("data-dialog-backdrop-close") === "true" && e.target === backdrop) {
+                backdrop.classList.add("opacity-0", "pointer-events-none");
+                backdrop.classList.remove("opacity-100", "pointer-events-auto");
+                }
+            });
+            });
+        });
+    </script>
+{% endblock 'body' %}

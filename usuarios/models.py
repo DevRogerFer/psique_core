@@ -1,16 +1,12 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.db import models
 
 
-def cadastro(request):
-    if request.method == 'GET':
-        return render(request, 'cadastro.html')
-    elif request.method == 'POST':
-        username = request.POST.get('username')
-        senha = request.POST.get('senha')
-        confirmar_senha = request.POST.get('confirmar_senha')
+class Pacientes(models.Model):
+    nome = models.CharField(max_length=64)
+    descricao = models.TextField()
+    foto = models.ImageField(upload_to='fotos')
+    ativo = models.BooleanField(default=True)
+    telefone = models.CharField(max_length=15, null=True, blank=True)
 
-        if senha != confirmar_senha:
-            return redirect('cadastro')
-
-        return HttpResponse(f'{username} - {senha} - {confirmar_senha}')
+    def __str__(self):
+        return self.nome
