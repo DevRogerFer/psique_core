@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from decouple import config
 from django.contrib.messages import constants
 import os
 from pathlib import Path
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuarios',
     'consultas',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +141,14 @@ MESSAGE_TAGS = {
     constants.ERROR: 'bg-red-50 text-red-700'
 
 }
+
+Q_CLUSTER = {
+    "name": "pythonando",
+    "workers": 1,
+    "retry": 200,
+    "timeout": 180,
+    "queue_limit": 50,
+    "orm": "default",
+}
+
+OPENAI_API_KEY = config('OPENAI_API_KEY')
