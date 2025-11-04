@@ -9,17 +9,18 @@ def consultas(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
     if request.method == 'GET':
         gravacoes = Gravacoes.objects.filter(paciente__id=id).order_by('data')
-        return render(request, 'consultas.html', {'paciente': paciente, 'gravacoes': gravacoes})
+        return render(
+            request,
+            'consultas.html',
+            {'paciente': paciente, 'gravacoes': gravacoes},
+        )
     elif request.method == 'POST':
         gravacao = request.FILES.get('gravacao')
         data = request.POST.get('data')
         trascript = request.POST.get('transcript') == 'on'
 
         gravacao = Gravacoes(
-            video=gravacao,
-            data=data,
-            transcrever=trascript,
-            paciente=paciente
+            video=gravacao, data=data, transcrever=trascript, paciente=paciente
         )
 
         gravacao.save()

@@ -11,3 +11,16 @@ class Gravacoes(models.Model):
     transcricao = models.TextField()
     resumo = models.JSONField(default=list, blank=True)
     segmentos = models.JSONField(default=list, blank=True)
+
+
+class DataTreinamento(models.Model):
+    recording = models.ForeignKey(Gravacoes, on_delete=models.DO_NOTHING)
+    text = models.TextField()
+
+
+class Pergunta(models.Model):
+    data_treinamento = models.ManyToManyField(DataTreinamento)
+    pergunta = models.TextField()
+
+    def __str__(self):
+        return self.pergunta

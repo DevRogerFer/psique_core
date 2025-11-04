@@ -23,7 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+7xvg&=i5-+9p*6pt)6qnne#mz1b#+fe%^hl_e1wk225@_h=^y'
+SECRET_KEY = (
+    'django-insecure-+7xvg&=i5-+9p*6pt)6qnne#mz1b#+fe%^hl_e1wk225@_h=^y'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,17 +140,16 @@ MEDIA_URL = '/media/'
 
 MESSAGE_TAGS = {
     constants.SUCCESS: 'bg-green-50 text-green-700',
-    constants.ERROR: 'bg-red-50 text-red-700'
-
+    constants.ERROR: 'bg-red-50 text-red-700',
 }
 
 Q_CLUSTER = {
-    "name": "pythonando",
-    "workers": 1,
-    "retry": 200,
-    "timeout": 180,
-    "queue_limit": 50,
-    "orm": "default",
+    'name': 'pythonando',
+    'workers': 1,
+    'retry': 200,
+    'timeout': 180,
+    'queue_limit': 50,
+    'orm': 'default',
 }
 
 OPENAI_API_KEY = config('OPENAI_API_KEY')

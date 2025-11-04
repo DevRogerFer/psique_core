@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Gravacoes
-from .tasks import transcribe_recording
+from .tasks import transcribe_recording, task_rag
 from django_q.tasks import async_task, Chain
 
 
@@ -11,4 +11,5 @@ def signals_gravacoes_transcricao_resumos(sender, instance, created, **kwargs):
         if instance.transcrever:
             chain = Chain()
             chain.append(transcribe_recording, instance.id)
+            chain.append(task_rag, instance.id)
             chain.run()
