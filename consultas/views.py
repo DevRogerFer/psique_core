@@ -3,11 +3,17 @@ from django.http import HttpResponse
 from usuarios.models import Pacientes
 from .models import Gravacoes
 from django.urls import reverse
+from .agents import RAGContext
 
 
 def consultas(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
     if request.method == 'GET':
+
+        x = RAGContext().retrieval(1, id)
+        for i in x:
+            print(i)
+
         gravacoes = Gravacoes.objects.filter(paciente__id=id).order_by('data')
         return render(
             request,

@@ -19,7 +19,8 @@ class DataTreinamento(models.Model):
 
 
 class Pergunta(models.Model):
-    data_treinamento = models.ManyToManyField(DataTreinamento)
+    data_treinamento = models.ManyToManyField(
+        DataTreinamento, null=True, blank=True)
     pergunta = models.TextField()
 
     def __str__(self):
