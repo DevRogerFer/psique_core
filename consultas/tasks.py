@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from .models import Gravacoes
 from django.conf import settings
 from langchain_core.documents import Document
-from .agents import RAGContext
+from .agents import RAGContext, SummaryAgent, EvaluationAgent
 
 
 def transcribe_recording(id_recording):
@@ -41,3 +41,12 @@ def task_rag(id_recording):
     docs = [Document(page_content=recording.transcricao, metadata={
                      "date": recording.data.strftime("%d/%m/%Y"), 'id_recording': id_recording}),]
     RAGContext().train(docs, recording.paciente.id)
+
+
+def summary_recording(id_recording):
+    recording = get_object_or_404(Gravacoes, id=id_recording)
+    recording.resumo = SummaryAgent().run(
+        transcription=recording.transcricao).summaries
+    recording.humor = EvaluationAgent().run(
+        transcription=recording.transcricao).evaluation
+    recording.save()

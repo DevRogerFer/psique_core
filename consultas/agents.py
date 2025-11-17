@@ -6,6 +6,66 @@ from langchain_community.vectorstores import FAISS
 from .models import Pergunta
 import textwrap
 import re
+from abc import abstractmethod
+from langchain_core.prompts import ChatPromptTemplate
+from prompts.prompts import SUMMARY_PROMPT, PSI_PROMPT, EVALUATION_PROMPT
+from pydantic import BaseModel, Field
+
+
+class BaseAgent:
+    llm = ChatOpenAI(
+        model_name='gpt-4.1-mini',
+        temperature=0.7,
+        openai_api_key=settings.OPENAI_API_KEY
+    )
+    language: str = 'pt-br'
+    audience: str = 'Psicologos e pacientes'
+
+    @abstractmethod
+    def _prompt(self): ...
+
+    @abstractmethod
+    def run(self): ...
+
+
+class Summaries(BaseModel):
+    summaries: list[str] = Field(description='A lista de resumos')
+
+
+class SummaryAgent(BaseAgent):
+
+    def _prompt(self):
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ('system', SUMMARY_PROMPT),
+                ('system', PSI_PROMPT),
+                ('human',
+                 'language: {language} | audience: {audience}\n\nUse a transcricao abaixo: {transcription}')
+            ]
+        )
+        return prompt
+
+    def run(self, transcription):
+        chain = self._prompt() | self.llm.with_structured_output(Summaries)
+        return chain.invoke({'transcription': transcription, 'language': self.language, 'audience': self.audience})
+
+
+class Evaluation(BaseModel):
+    evaluation: int = Field(
+        description='Avaliação de 1 a 5 referente ao humor do paciente com base na transcrição')
+
+
+class EvaluationAgent(BaseAgent):
+    def _prompt(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ('system', EVALUATION_PROMPT),
+            ('human', 'language: {language} | audience: {audience}\nUse a transcrição abaixo: {transcription}')])
+
+        return prompt
+
+    def run(self, transcription):
+        chain = self._prompt() | self.llm.with_structured_output(Evaluation)
+        return chain.invoke({'transcription': transcription, 'language': self.language, 'audience': self.audience})
 
 
 class RAGContext:
