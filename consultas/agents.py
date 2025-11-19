@@ -3,7 +3,7 @@ from django.conf import settings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
 from langchain_community.vectorstores import FAISS
-from .models import Pergunta
+from .models import Pergunta, DataTreinamento
 import textwrap
 import re
 from abc import abstractmethod
@@ -113,6 +113,14 @@ class RAGContext:
                 pergunta.pergunta, max(k*5, 20), filter={'date': date})
         else:
             docs = vectordb.similarity_search(pergunta.pergunta, k)
+
+        for doc in docs:
+            data = DataTreinamento(
+                recording_id=doc.metadata['id_recording'],
+                text=doc.page_content
+            )
+            data.save()
+            pergunta.data_treinamento.add(data)
 
         contexto = '\n\n'.join([
             f'Material: {doc.page_content}'
