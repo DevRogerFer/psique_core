@@ -1,3 +1,6 @@
 venv/
 
 .env
+
+# FAISS vector database indices (can be regenerated)
+faiss_banco/

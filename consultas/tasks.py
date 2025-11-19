@@ -39,7 +39,7 @@ def task_rag(id_recording):
     recording = get_object_or_404(Gravacoes, id=id_recording)
 
     docs = [Document(page_content=recording.transcricao, metadata={
-                     "date": recording.data.strftime("%d/%m/%Y"), 'id_recording': id_recording}),]
+                     "date": recording.data.strftime("%d/%m/%Y"), 'recording_id': id_recording}),]
     RAGContext().train(docs, recording.paciente.id)
 
 
