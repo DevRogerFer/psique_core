@@ -150,7 +150,6 @@ class RAGContext:
             {contexto or "∅ (sem resultados)"}
             ---
         """).strip()
-        print(system_prompt)
         messages = [
             {'role': 'system', 'content': system_prompt},
             {'role': 'user', 'content': f'{pergunta.pergunta}'}

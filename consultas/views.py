@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, StreamingHttpResponse, JsonResponse
 from usuarios.models import Pacientes
-from .models import Gravacoes, Pergunta
+from .models import Gravacoes, Pergunta, DataTreinamento
 from django.urls import reverse
 from .agents import RAGContext
 from django.views.decorators.csrf import csrf_exempt
@@ -59,3 +59,12 @@ def chat(request, id):
 def gravacao(request, id):
     gravacao = get_object_or_404(Gravacoes, id=id)
     return render(request, 'gravacao.html', {'gravacao': gravacao})
+
+
+def ver_referencias(request, id):
+    pergunta = get_object_or_404(Pergunta, id=id)
+    data_treinamento = pergunta.data_treinamento.all()
+    gravacoes = Gravacoes.objects.filter(
+        datatreinamento__in=data_treinamento).distinct()
+
+    return render(request, 'ver_referencias.html', {'pergunta': pergunta, 'data_treinamento': data_treinamento, 'gravacoes': gravacoes})
