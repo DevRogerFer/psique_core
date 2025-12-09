@@ -71,8 +71,11 @@ def pacientes(request):
         foto = request.FILES.get('foto')
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
+        codigo_pais = request.POST.get('codigo_pais', '').strip()
+        telefone = request.POST.get('telefone', '').strip()
+        telefone_completo = f"{codigo_pais} {telefone}".strip()
 
-        paciente = Pacientes(foto=foto, nome=nome, descricao=descricao)
+        paciente = Pacientes(foto=foto, nome=nome, descricao=descricao, telefone=telefone_completo)
 
         paciente.save()
 
