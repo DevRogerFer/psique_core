@@ -78,3 +78,23 @@
 2025-12-08 22:44:16,571 - INFO - Envio texto → 5511992550655 | Status 200
 2025-12-08 22:44:16,571 - DEBUG - Resposta API: {"messaging_product":"whatsapp","contacts":[{"input":"5511992550655","wa_id":"5511992550655"}],"messages":[{"id":"wamid.HBgNNTUxMTk5MjU1MDY1NRUCABEYEjUyRDM4OEIwNzg3OTg0MDI4NwA="}]}
 2025-12-08 22:44:16,571 - INFO - Texto enviado com sucesso → 5511992550655
+2025-12-13 11:44:41,877 - DEBUG - Enviando resumo para 5511992550655: Tarefa: Praticar MyDefones para ansiedade três vezes ao dia, iniciando hoje.
+2025-12-13 11:44:41,878 - DEBUG - Enviando mensagem de texto: {'messaging_product': 'whatsapp', 'to': '5511992550655', 'type': 'text', 'text': {'body': 'Tarefa: Praticar MyDefones para ansiedade três vezes ao dia, iniciando hoje.'}}
+2025-12-13 11:44:43,539 - INFO - Envio texto → 5511992550655 | Status 200
+2025-12-13 11:44:43,539 - DEBUG - Resposta API: {"messaging_product":"whatsapp","contacts":[{"input":"5511992550655","wa_id":"5511992550655"}],"messages":[{"id":"wamid.HBgNNTUxMTk5MjU1MDY1NRUCABEYEjc0NkI2MzBCQ0UyQkFBNjNCMQA="}]}
+2025-12-13 11:44:43,540 - INFO - Texto enviado com sucesso → 5511992550655
+2025-12-13 11:44:43,540 - DEBUG - Enviando resumo para 5511992550655: Lembrete: Verificar possibilidade de troca do dia da consulta e informar o paciente.
+2025-12-13 11:44:43,540 - DEBUG - Enviando mensagem de texto: {'messaging_product': 'whatsapp', 'to': '5511992550655', 'type': 'text', 'text': {'body': 'Lembrete: Verificar possibilidade de troca do dia da consulta e informar o paciente.'}}
+2025-12-13 11:44:44,385 - INFO - Envio texto → 5511992550655 | Status 200
+2025-12-13 11:44:44,385 - DEBUG - Resposta API: {"messaging_product":"whatsapp","contacts":[{"input":"5511992550655","wa_id":"5511992550655"}],"messages":[{"id":"wamid.HBgNNTUxMTk5MjU1MDY1NRUCABEYEkFEMTlFRjY2RTYxNzFFRDk3RAA="}]}
+2025-12-13 11:44:44,387 - INFO - Texto enviado com sucesso → 5511992550655
+2025-12-13 11:45:50,153 - DEBUG - Enviando resumo para 5511992550655: Tarefa: Praticar MyDefones para ansiedade três vezes ao dia, iniciando hoje.
+2025-12-13 11:45:50,153 - DEBUG - Enviando mensagem de texto: {'messaging_product': 'whatsapp', 'to': '5511992550655', 'type': 'text', 'text': {'body': 'Tarefa: Praticar MyDefones para ansiedade três vezes ao dia, iniciando hoje.'}}
+2025-12-13 11:45:51,131 - INFO - Envio texto → 5511992550655 | Status 200
+2025-12-13 11:45:51,133 - DEBUG - Resposta API: {"messaging_product":"whatsapp","contacts":[{"input":"5511992550655","wa_id":"5511992550655"}],"messages":[{"id":"wamid.HBgNNTUxMTk5MjU1MDY1NRUCABEYEjQ1QjBBMkZDRUM1RDczQUM3MwA="}]}
+2025-12-13 11:45:51,139 - INFO - Texto enviado com sucesso → 5511992550655
+2025-12-13 11:45:51,140 - DEBUG - Enviando resumo para 5511992550655: Lembrete: Verificar possibilidade de troca do dia da consulta e informar o paciente.
+2025-12-13 11:45:51,140 - DEBUG - Enviando mensagem de texto: {'messaging_product': 'whatsapp', 'to': '5511992550655', 'type': 'text', 'text': {'body': 'Lembrete: Verificar possibilidade de troca do dia da consulta e informar o paciente.'}}
+2025-12-13 11:45:52,033 - INFO - Envio texto → 5511992550655 | Status 200
+2025-12-13 11:45:52,033 - DEBUG - Resposta API: {"messaging_product":"whatsapp","contacts":[{"input":"5511992550655","wa_id":"5511992550655"}],"messages":[{"id":"wamid.HBgNNTUxMTk5MjU1MDY1NRUCABEYEkMyMDA0OUIxNTM1NDgxOTlBNQA="}]}
+2025-12-13 11:45:52,035 - INFO - Texto enviado com sucesso → 5511992550655
