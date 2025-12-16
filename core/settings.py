@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import cloudinary.api
+import cloudinary.uploader
+import cloudinary
 from decouple import config
 from django.contrib.messages import constants
 import os
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     'usuarios',
     'consultas',
     'django_q',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 if DEBUG:
@@ -139,17 +144,16 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
+# Static files storage
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
 
 MESSAGE_TAGS = {
     constants.SUCCESS: 'bg-green-50 text-green-700',
@@ -169,3 +173,15 @@ OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 WHATSAPP_TOKEN = config("WHATSAPP_CLOUD_API_TOKEN")
 PHONE_NUMBER_ID = config("WHATSAPP_PHONE_NUMBER_ID")
+
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+MEDIA_URL = "/media/"
