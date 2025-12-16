@@ -4,8 +4,13 @@ set -e
 echo "Running migrations..."
 python manage.py migrate --noinput
 
-echo "Collecting static files..."
+echo "Collecting static..."
 python manage.py collectstatic --noinput
 
 echo "Starting Gunicorn..."
-gunicorn core.wsgi:application --bind 0.0.0.0:8080
+exec gunicorn core.wsgi:application \
+  --bind 0.0.0.0:8080 \
+  --log-level debug \
+  --access-logfile - \
+  --error-logfile -
+
