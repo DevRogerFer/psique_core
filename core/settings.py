@@ -17,6 +17,8 @@ from decouple import config
 from django.contrib.messages import constants
 import os
 from pathlib import Path
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,10 +93,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 
 
@@ -160,13 +163,14 @@ MESSAGE_TAGS = {
     constants.ERROR: 'bg-red-50 text-red-700',
 }
 
+
 Q_CLUSTER = {
-    'name': 'pythonando',
-    'workers': 1,
-    'retry': 200,
-    'timeout': 180,
-    'queue_limit': 50,
-    'orm': 'default',
+    "name": "psique",
+    "workers": 2,
+    "timeout": 300,
+    "retry": 300,
+    "queue_limit": 50,
+    "broker": config("REDIS_URL"),
 }
 
 OPENAI_API_KEY = config('OPENAI_API_KEY')
