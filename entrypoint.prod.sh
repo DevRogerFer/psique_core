@@ -1,8 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -e
 
-python manage.py migrate --noinput &&
-python manage.py collectstatic --noinput &
+echo "Running migrations..."
+python manage.py migrate --noinput
 
-python manage.py qcluster &
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-gunicorn core.wsgi
+echo "Starting Gunicorn..."
+gunicorn core.wsgi:application --bind 0.0.0.0:8080
