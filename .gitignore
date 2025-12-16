@@ -3,4 +3,6 @@ whatsapp.log
 .env
 __pycache__/
 venv/
+
+faiss_banco/
 db.sqlite3
