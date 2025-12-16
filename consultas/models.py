@@ -3,8 +3,12 @@ from usuarios.models import Pacientes
 
 
 class Gravacoes(models.Model):
-    video = models.FileField(upload_to='gravacoes')
-    data = models.DateTimeField()
+    video = models.FileField(
+        upload_to="gravacoes/",
+        blank=True,
+        null=True
+    )
+    data = models.DateTimeField(auto_now_add=True)
     transcrever = models.BooleanField(default=False)
     paciente = models.ForeignKey(Pacientes, on_delete=models.DO_NOTHING)
     humor = models.IntegerField(default=0)
@@ -20,7 +24,9 @@ class DataTreinamento(models.Model):
 
 class Pergunta(models.Model):
     data_treinamento = models.ManyToManyField(
-        DataTreinamento, null=True, blank=True)
+        DataTreinamento,
+        blank=True
+    )
     pergunta = models.TextField()
 
     def __str__(self):
