@@ -17,6 +17,7 @@ from decouple import config
 from django.contrib.messages import constants
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 import dj_database_url
 
 
@@ -163,14 +164,27 @@ MESSAGE_TAGS = {
     constants.ERROR: 'bg-red-50 text-red-700',
 }
 
+REDIS_URL = os.environ.get("REDIS_URL")
+
+if not REDIS_URL:
+    raise RuntimeError("REDIS_URL não configurada")
+
+redis_parsed = urlparse(REDIS_URL)
 
 Q_CLUSTER = {
     "name": "psique",
     "workers": 2,
     "timeout": 300,
-    "retry": 300,
+    "retry": 330,
     "queue_limit": 50,
-    "broker": config("REDIS_URL"),
+    "bulk": 10,
+    "orm": False,
+    "redis": {
+        "host": redis_parsed.hostname,
+        "port": redis_parsed.port,
+        "password": redis_parsed.password,
+        "db": 0,
+    },
 }
 
 OPENAI_API_KEY = config('OPENAI_API_KEY')
