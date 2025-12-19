@@ -1,10 +1,12 @@
 from django.db import models
 from usuarios.models import Pacientes
+from cloudinary.models import CloudinaryField
 
 
 class Gravacoes(models.Model):
-    video = models.FileField(
-        upload_to="gravacoes/",
+    video = CloudinaryField(
+        resource_type="video",
+        folder="gravacoes",
         blank=True,
         null=True
     )
