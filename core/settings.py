@@ -178,8 +178,11 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bulk": 10,
     "orm": False,
-    "redis": REDIS_URL,
+    "redis": {
+        "host": REDIS_URL,
+    },
 }
+
 
 OPENAI_API_KEY = config('OPENAI_API_KEY')
 
