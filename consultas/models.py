@@ -10,11 +10,11 @@ class Gravacoes(models.Model):
         blank=True,
         null=True
     )
-    data = models.DateTimeField(auto_now_add=True)
+    data = models.DateTimeField(blank=True, null=True)
     transcrever = models.BooleanField(default=False)
     paciente = models.ForeignKey(Pacientes, on_delete=models.DO_NOTHING)
     humor = models.IntegerField(default=0)
-    transcricao = models.TextField()
+    transcricao = models.TextField(default="", blank=True)
     resumo = models.JSONField(default=list, blank=True)
     segmentos = models.JSONField(default=list, blank=True)
 

@@ -6,3 +6,5 @@ venv/
 
 faiss_banco/
 db.sqlite3
+
+FIX_ERRO_500_GRAVACAO.md

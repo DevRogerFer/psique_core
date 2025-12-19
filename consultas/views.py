@@ -50,10 +50,22 @@ def consultas(request, id):
     # POST → Salva nova gravação
     # ---------------------------------------------------------------------
     elif request.method == 'POST':
+        from django.utils import timezone
+        from datetime import datetime
 
         gravacao_file = request.FILES.get("gravacao")
-        data = request.POST.get("data")
+        data_str = request.POST.get("data")
         transcript = request.POST.get("transcript") == "on"
+
+        # Converter string de data para datetime
+        try:
+            if data_str:
+                data = datetime.strptime(data_str, "%Y-%m-%d")
+                data = timezone.make_aware(data)
+            else:
+                data = timezone.now()
+        except (ValueError, TypeError):
+            data = timezone.now()
 
         gravacao = Gravacoes(
             video=gravacao_file,
@@ -62,7 +74,14 @@ def consultas(request, id):
             paciente=paciente
         )
 
-        gravacao.save()
+        try:
+            gravacao.save()
+            messages.success(request, "Gravação salva com sucesso!")
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"Erro ao salvar gravacao: {str(e)}")
+            messages.error(
+                request, "Erro ao salvar gravação. Tente novamente.")
 
         return redirect(reverse('consultas', kwargs={'id': id}))
 
