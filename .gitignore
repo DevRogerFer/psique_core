@@ -8,3 +8,7 @@ faiss_banco/
 db.sqlite3
 
 FIX_ERRO_500_GRAVACAO.md
+DIAGNOSTICO_TRANSCRICAO.md
+SOLUCAO_TRANSCRICAO_RESUMOS.md
+test_transcription.sh
+debug_django_q.py

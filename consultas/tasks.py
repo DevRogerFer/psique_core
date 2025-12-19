@@ -7,10 +7,13 @@ from .agents import RAGContext, SummaryAgent, EvaluationAgent
 
 
 def transcribe_recording(id_recording):
-    recording = get_object_or_404(Gravacoes, id=id_recording)
-    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+    import logging
+    logger = logging.getLogger(__name__)
 
     try:
+        recording = get_object_or_404(Gravacoes, id=id_recording)
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
         # Usar URL do Cloudinary ao invés de path local
         video_url = recording.video.url if hasattr(
             recording.video, 'url') else None
@@ -19,11 +22,14 @@ def transcribe_recording(id_recording):
             raise ValueError(
                 f"URL do vídeo não disponível para gravação {id_recording}")
 
+        logger.info(f"Baixando vídeo de {video_url}")
         # Baixar arquivo do Cloudinary
         import requests
         response = requests.get(video_url)
         if response.status_code != 200:
             raise ValueError(f"Erro ao baixar vídeo: {response.status_code}")
+
+        logger.info(f"Vídeo baixado com sucesso. Enviando para transcrição...")
 
         # Enviar para OpenAI Whisper usando bytes
         from io import BytesIO
@@ -51,27 +57,74 @@ def transcribe_recording(id_recording):
 
         recording.segmentos = segmentos
         recording.save()
+        logger.info(
+            f"Transcrição concluída com sucesso para gravacao {id_recording}")
         return 'OK'
 
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Erro ao transcrever gravação {id_recording}: {str(e)}")
+        logger.error(
+            f"Erro ao transcrever gravação {id_recording}: {str(e)}", exc_info=True)
         return f"ERRO: {str(e)}"
 
 
 def task_rag(id_recording):
-    recording = get_object_or_404(Gravacoes, id=id_recording)
+    import logging
+    logger = logging.getLogger(__name__)
 
-    docs = [Document(page_content=recording.transcricao, metadata={
-                     "date": recording.data.strftime("%d/%m/%Y"), 'id_recording': id_recording}),]
-    RAGContext().train(docs, recording.paciente.id)
+    try:
+        recording = get_object_or_404(Gravacoes, id=id_recording)
+
+        if not recording.transcricao:
+            logger.warning(
+                f"Gravacao {id_recording} sem transcrição. Pulando RAG.")
+            return "SEM_TRANSCRICAO"
+
+        if not recording.data:
+            logger.warning(
+                f"Gravacao {id_recording} sem data. Usando data atual.")
+            from django.utils import timezone
+            data_str = timezone.now().strftime("%d/%m/%Y")
+        else:
+            data_str = recording.data.strftime("%d/%m/%Y")
+
+        docs = [Document(page_content=recording.transcricao, metadata={
+                         "date": data_str, 'id_recording': id_recording}),]
+        RAGContext().train(docs, recording.paciente.id)
+        logger.info(f"RAG treinado com sucesso para gravacao {id_recording}")
+        return "OK"
+
+    except Exception as e:
+        logger.error(
+            f"Erro ao processar RAG para gravacao {id_recording}: {str(e)}", exc_info=True)
+        return f"ERRO: {str(e)}"
 
 
 def summary_recording(id_recording):
-    recording = get_object_or_404(Gravacoes, id=id_recording)
-    recording.resumo = SummaryAgent().run(
-        transcription=recording.transcricao).summaries
-    recording.humor = EvaluationAgent().run(
-        transcription=recording.transcricao).evaluation
-    recording.save()
+    import logging
+    logger = logging.getLogger(__name__)
+
+    try:
+        recording = get_object_or_404(Gravacoes, id=id_recording)
+
+        if not recording.transcricao:
+            logger.warning(
+                f"Gravacao {id_recording} sem transcrição. Pulando resumo.")
+            return "SEM_TRANSCRICAO"
+
+        logger.info(f"Gerando resumo para gravacao {id_recording}")
+        summary_result = SummaryAgent().run(transcription=recording.transcricao)
+        recording.resumo = summary_result.summaries
+
+        logger.info(f"Gerando avaliação de humor para gravacao {id_recording}")
+        evaluation_result = EvaluationAgent().run(transcription=recording.transcricao)
+        recording.humor = evaluation_result.evaluation
+
+        recording.save()
+        logger.info(
+            f"Resumo e humor salvos com sucesso para gravacao {id_recording}")
+        return "OK"
+
+    except Exception as e:
+        logger.error(
+            f"Erro ao gerar resumo para gravacao {id_recording}: {str(e)}", exc_info=True)
+        return f"ERRO: {str(e)}"

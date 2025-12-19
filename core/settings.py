@@ -202,17 +202,22 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": "ERROR",
+        "level": "INFO",
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "ERROR",
+            "level": "INFO",
             "propagate": True,
         },
         "django.request": {
             "handlers": ["console"],
             "level": "ERROR",
+            "propagate": False,
+        },
+        "consultas": {
+            "handlers": ["console"],
+            "level": "DEBUG",
             "propagate": False,
         },
     },
