@@ -17,7 +17,6 @@ from decouple import config
 from django.contrib.messages import constants
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 import dj_database_url
 
 
@@ -168,8 +167,6 @@ REDIS_URL = os.environ.get("REDIS_URL")
 if not REDIS_URL:
     raise RuntimeError("REDIS_URL não configurada")
 
-redis_parsed = urlparse(REDIS_URL)
-
 Q_CLUSTER = {
     "name": "psique",
     "workers": 2,
@@ -178,9 +175,7 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bulk": 10,
     "orm": False,
-    "redis": {
-        "host": REDIS_URL,
-    },
+    "redis": REDIS_URL,
 }
 
 
