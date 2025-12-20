@@ -22,8 +22,8 @@ def signals_gravacoes_transcricao_resumos(sender, instance, created, **kwargs):
                 chain.append(transcribe_recording, instance.id)
                 chain.append(task_rag, instance.id)
                 chain.append(summary_recording, instance.id)
-                # Enfileirar o chain em vez de executar imediatamente
-                async_task(chain)
+                # Enfileirar o chain (django-q executa em ordem)
+                chain.run()
                 logger.info(
                     f"Chain de processamento disparado para gravacao {instance.id}")
             except Exception as e:
