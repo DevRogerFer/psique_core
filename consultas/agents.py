@@ -3,7 +3,7 @@ from django.conf import settings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
 from langchain_community.vectorstores import FAISS
-from .models import Pergunta, DataTreinamento
+from .models import Pergunta, DataTreinamento, Gravacoes
 import textwrap
 import re
 from abc import abstractmethod
@@ -115,8 +115,12 @@ class RAGContext:
             docs = vectordb.similarity_search(pergunta.pergunta, k)
 
         for doc in docs:
+            rec_id = doc.metadata.get('id_recording')
+            # Proteger contra referências antigas em índices FAISS para gravações que não existem mais
+            if not Gravacoes.objects.filter(id=rec_id).exists():
+                continue
             data = DataTreinamento(
-                recording_id=doc.metadata['id_recording'],
+                recording_id=rec_id,
                 text=doc.page_content
             )
             data.save()
