@@ -163,10 +163,13 @@ MESSAGE_TAGS = {
     constants.ERROR: 'bg-red-50 text-red-700',
 }
 
-REDIS_URL = os.environ.get("REDIS_URL")
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
 
-if not REDIS_URL:
-    raise RuntimeError("REDIS_URL não configurada")
+# Warn if using default Redis URL
+if REDIS_URL == "redis://localhost:6379/0":
+    import warnings
+    warnings.warn(
+        "Using default Redis URL - ensure Redis is running locally or configure REDIS_URL")
 
 Q_CLUSTER = {
     "name": "psique",
