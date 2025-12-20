@@ -14,6 +14,7 @@ from .agents import RAGContext
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from datetime import datetime
+from django_q.tasks import async_task
 # from .wrapper_evolutionapi import BaseEvolutionAPI, SendMessage
 
 
@@ -76,6 +77,16 @@ def consultas(request, id):
 
         try:
             gravacao.save()
+            logger = logging.getLogger(__name__)
+            logger.info(
+                f"Gravacao criada: ID={gravacao.id}, transcrever={transcript}")
+
+            # Disparar task de transcrição se solicitado
+            if transcript:
+                async_task('consultas.tasks.transcribe_recording', gravacao.id)
+                logger.info(
+                    f"Task de transcrição disparada para gravação {gravacao.id}")
+
             messages.success(request, "Gravação salva com sucesso!")
         except Exception as e:
             logger = logging.getLogger(__name__)

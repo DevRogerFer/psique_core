@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'consultas',
     'cloudinary_storage',
     'cloudinary',
+    'django_q',
 ]
 
 if DEBUG:
